@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
 import express from 'express';
-import getToken from './utils/getToken.js'
+import { getToken, requestAPI } from './utils/utilities.js'
 
 
 dotenv.config();
@@ -19,10 +19,10 @@ evaluationController.get('/', async (request, response, next) => {
 app.use('/api/evaluations', evaluationController)
 
 
-const token = await getToken()
-console.log(token)
+const { access_token, expires_in }  = await getToken()
+console.log(access_token, expires_in)
 
-
-
+const response = await requestAPI('/cursus/42/users', access_token);
+console.log(response)
 
 export default app;
