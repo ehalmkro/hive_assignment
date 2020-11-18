@@ -1,0 +1,23 @@
+{
+  "name": "bad_evals",
+  "version": "1.0.0",
+  "description": "Hive Helsinki internship assignment. A tool to catch 'bad evaluations' from 42 API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development nodemon index.js "
+  },
+  "type": "module",
+  "author": "ehalmkro",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "0.0.1-security"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.6"
+  }
+}
