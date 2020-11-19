@@ -42,6 +42,7 @@ const fetchAllFromAPI = async (request, token, parameters = null) => {
     let page = 2;
     
     const apiLooper = async () => {
+        console.log('working...')
         return await new Promise(resolve => {
         const intervalID = setInterval(async () => {
             data = await requestAPI(request, token, {
@@ -51,13 +52,12 @@ const fetchAllFromAPI = async (request, token, parameters = null) => {
             });
             page = page + 1;
             allData.push(...data);
-            console.log('working...')
             if (data.length < 100) {
                 clearInterval(intervalID)
                 console.log(`done fetching ${request}`)
                 resolve(allData)
             }
-        }, 500)
+        }, 750)
         })
     }
 
