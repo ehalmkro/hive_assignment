@@ -33,4 +33,33 @@ const requestAPI = async (requestURI, token, parameters = null) => {
 }
 
 
-export {getToken, requestAPI};
+const getAllCampusUsers = async (campus_id, token) => {
+    let data = await requestAPI('/campus/13/users/', token, {per_page: 100});
+    if (data.length < 100)
+        return data;
+    let users = data;
+    let page = 2;
+
+    const apiLooper = async () => {
+        return await new Promise(resolve => {
+        const intervalID = setInterval(async () => {
+            data = await requestAPI('/campus/13/users/', token, {
+                per_page: 100,
+                page: page
+            });
+            page = page + 1;
+            users.push(...data);
+            if (data.length < 100) {
+                clearInterval(intervalID)
+                resolve(users)
+            }
+        }, 500)
+        })
+    }
+    return apiLooper();
+}
+
+
+
+
+export {getToken, requestAPI, getAllCampusUsers};
