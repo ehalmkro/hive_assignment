@@ -14,7 +14,8 @@
     "axios": "^0.21.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "http": "0.0.1-security"
+    "http": "0.0.1-security",
+    "lodash": "^4.17.20"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
