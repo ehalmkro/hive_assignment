@@ -1,6 +1,6 @@
 import express from 'express';
 import {fetchAllFromAPI, getToken} from "./apiUtils.js";
-import parseUtils from './parseUtils.js'
+import {parseEvaluations, applyGoodnessScale} from './parseUtils.js'
 
 const evaluationController = express.Router()
 
@@ -18,7 +18,9 @@ await new Promise(r => setTimeout(r, 1000)); // Sleep to not go over rate limit.
 const evaluationList = await fetchAllFromAPI(
     `/scale_teams?range[filled_at]=${dayAgo.toISOString()},${now.toISOString()}`, access_token)
 
-const {shortEvaluations, shortFeedbackEvaluations, lowRatingEvaluations} = parseUtils.parseEvaluations(evaluationList)
+const {shortEvaluations, shortFeedbackEvaluations, lowRatingEvaluations} = parseEvaluations(evaluationList)
+
+const evaluationListWithGoodness = applyGoodnessScale(evaluationList)
 
 evaluationController.get('/', async (request, response, next) => {
     response.status(200).json({
