@@ -1,6 +1,6 @@
 import express from 'express';
 import {fetchAllFromAPI, getToken} from "./apiUtils.js";
-import {parseEvaluations, applyGoodnessScale} from './parseUtils.js'
+import {parseEvaluations, applyGoodnessScale, goodnessCount} from './parseUtils.js'
 
 const evaluationController = express.Router()
 
@@ -22,12 +22,15 @@ const {shortEvaluations, shortFeedbackEvaluations, lowRatingEvaluations} = parse
 
 const evaluationListWithGoodness = applyGoodnessScale(evaluationList)
 
+const goodnessDistribution = goodnessCount(evaluationListWithGoodness)
+
 evaluationController.get('/', async (request, response, next) => {
     response.status(200).json({
         totalEvaluations: evaluationList.length,
         shortEvaluations: shortEvaluations.length,
         shortFeedbackEvaluations: shortFeedbackEvaluations.length,
         lowRating: lowRatingEvaluations.length,
+        goodnessDistribution: goodnessDistribution
     });
 })
 

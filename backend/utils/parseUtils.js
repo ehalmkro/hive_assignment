@@ -28,10 +28,13 @@ export const applyGoodnessScale = (evaluationList) => {
         let goodness = shortEval(evaluation) ? 0.66 : 1;
         goodness = shortFeedback(evaluation) ? goodness - 0.33 : goodness;
         goodness = lowRating(evaluation) ? goodness - 0.33 : goodness;
-        console.log(goodness)
         return {
             ...evaluation,
             evalGoodness: goodness
         }
     })
+}
+
+export const goodnessCount = (evaluationList) => {
+    return _.countBy(evaluationList, 'evalGoodness')
 }
