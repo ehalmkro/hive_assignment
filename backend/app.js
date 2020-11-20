@@ -34,14 +34,19 @@ console.log(access_token, expires_in)
 await new Promise(r => setTimeout(r, 1000)); // Sleep to not go over rate limit...
 
 const evaluationList = await fetchAllFromAPI(`/scale_teams?range[filled_at]=${dayAgo.toISOString()},${now.toISOString()}`, access_token)
-console.log('before', evaluationList.length)
+console.log(evaluationList.length, 'evaluations in the past 24h')
 
-_.remove(evaluationList, (evaluation) => {
+const shortEvaluations = _.filter(evaluationList, evaluation => {
     const filledAt = Date.parse(evaluation.filled_at)
     const beginAt = Date.parse(evaluation.begin_at)
-    return ((filledAt - beginAt) / 1000 / 60) > 15
+    return ((filledAt - beginAt) / 1000 / 60) < 15
 })
-console.log('after', evaluationList.length)
+
+const shortFeedbackEvaluations = _.filter(evaluationList, evaluation => evaluation.comment.length < 100)
+
+
+console.log(shortEvaluations.length, 'short evaluations')
+console.log(shortFeedbackEvaluations.length, 'evals with short comment')
 
 app.use('/api/evaluations', evaluationController)
 
