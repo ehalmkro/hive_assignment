@@ -1,8 +1,10 @@
 import axios from "axios";
+import dotenv from 'dotenv';
 
 const baseUrl = 'https://api.intra.42.fr/v2';
 
 const getToken = async () => {
+    dotenv.config();
     const {UID, SECRET} = process.env
     try {
         const response = await axios.post(
@@ -40,7 +42,7 @@ const fetchAllFromAPI = async (request, token, parameters = null) => {
         return data;
     let allData = data;
     let page = 2;
-    
+
     const apiLooper = async () => {
         console.log('working...')
         return await new Promise(resolve => {
