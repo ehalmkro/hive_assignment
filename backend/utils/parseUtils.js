@@ -25,12 +25,12 @@ export const parseEvaluations = (evaluationList) => {
 
 export const applyGoodnessScale = (evaluationList) => {
     return evaluationList.map(evaluation => {
-        let goodness = shortEval(evaluation) ? 0.66 : 1;
-        goodness = shortFeedback(evaluation) ? goodness - 0.33 : goodness;
-        goodness = lowRating(evaluation) ? goodness - 0.33 : goodness;
+        let goodness = shortEval(evaluation) ? 2/3 : 1;
+        goodness = shortFeedback(evaluation) ? goodness - 1/3 : goodness;
+        goodness = lowRating(evaluation) ? goodness - 1/3 : goodness;
         return {
             ...evaluation,
-            evalGoodness: goodness
+            evalGoodness: goodness.toFixed(2)
         }
     })
 }
