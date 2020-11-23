@@ -24,7 +24,7 @@ let evaluationList;
 if ((await dbUtils.countAll(db)).COUNT === 0) {
     evaluationList = await fetchAllFromAPI(
         `/scale_teams?range[filled_at]=${dayAgo.toISOString()},${now.toISOString()}`, access_token)
-    await dbUtils.save(db, evaluationList)
+    await dbUtils.save(db, applyGoodnessScale(evaluationList))
 }
 else
     evaluationList = await dbUtils.getJSON(db)
@@ -32,12 +32,9 @@ else
 
 const {shortEvaluations, shortFeedbackEvaluations, lowRatingEvaluations} = parseEvaluations(evaluationList)
 
-const evaluationListWithGoodness = applyGoodnessScale(evaluationList)
+const goodnessDistribution = goodnessCount(evaluationList)
 
-const goodnessDistribution = goodnessCount(evaluationListWithGoodness)
-
-
-evaluationController.get('/', async (request, response, next) => {
+evaluationController.get('/stats', async (request, response, next) => {
     response.status(200).json({
         totalEvaluations: evaluationList.length,
         shortEvaluations: shortEvaluations.length,
