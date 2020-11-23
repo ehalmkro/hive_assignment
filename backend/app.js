@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 
-import evaluationController from "./utils/evaluationController.js";
+import evaluationController from "./src/evaluationController.js";
 
 
 const app = express();

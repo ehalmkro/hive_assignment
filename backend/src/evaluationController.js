@@ -1,6 +1,9 @@
 import express from 'express';
-import {fetchAllFromAPI, getToken} from "./apiUtils.js";
-import {parseEvaluations, applyGoodnessScale, goodnessCount} from './parseUtils.js'
+import {fetchAllFromAPI, getToken} from "../utils/apiUtils.js";
+import {parseEvaluations, applyGoodnessScale, goodnessCount} from '../utils/parseUtils.js'
+import dbUtils from "./evaluationModel.js";
+
+
 
 const evaluationController = express.Router()
 
@@ -13,16 +16,26 @@ console.log('now it is', now, 'a day ago it was', dayAgo)
 const {access_token, expires_in} = await getToken()
 console.log(access_token, expires_in)
 
-await new Promise(r => setTimeout(r, 1000)); // Sleep to not go over rate limit...
 
-const evaluationList = await fetchAllFromAPI(
-    `/scale_teams?range[filled_at]=${dayAgo.toISOString()},${now.toISOString()}`, access_token)
+const db = await dbUtils.openDb()
+await dbUtils.init(db);
+
+let evaluationList;
+if ((await dbUtils.countAll(db)).COUNT === 0) {
+    evaluationList = await fetchAllFromAPI(
+        `/scale_teams?range[filled_at]=${dayAgo.toISOString()},${now.toISOString()}`, access_token)
+    await dbUtils.save(db, evaluationList)
+}
+else
+    evaluationList = await dbUtils.getJSON(db)
+
 
 const {shortEvaluations, shortFeedbackEvaluations, lowRatingEvaluations} = parseEvaluations(evaluationList)
 
 const evaluationListWithGoodness = applyGoodnessScale(evaluationList)
 
 const goodnessDistribution = goodnessCount(evaluationListWithGoodness)
+
 
 evaluationController.get('/', async (request, response, next) => {
     response.status(200).json({
