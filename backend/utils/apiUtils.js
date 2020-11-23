@@ -15,6 +15,7 @@ const getToken = async () => {
                 client_secret: SECRET,
                 redirect_uri: 'http://localhost:3001'
             })
+        await new Promise(r => setTimeout(r, 500)); // Sleep to not go over rate limit...
         return response.data;
     } catch (error) {
         console.log(error)
@@ -43,13 +44,13 @@ const fetchAllFromAPI = async (request, token, parameters = null) => {
     const allData = [];
     for (let page = 1; page <= Math.round(maxCount / 100); page++)
     {
+        await new Promise(r => setTimeout(r, 500));
         console.log(`fetching page ${page}/${Math.round(maxCount/100)}`)
         let data = (await requestAPI(request, token, {
             ...parameters,
             per_page: 100,
             page: page
         })).data;
-        await new Promise(r => setTimeout(r, 500));
         allData.push(...data)
     }
     return allData;
