@@ -6,7 +6,9 @@ const shortEval = (evaluation) => {
     return ((filledAt - beginAt) / 1000 / 60) < 15
 }
 
-const shortFeedback = evaluation => evaluation.comment.length < 100
+const shortFeedback = evaluation => {
+    return evaluation.comment.length < 100
+}
 
 const lowRating = evaluation => {
     // most of the feedbacks are an array within scale_team, some are formatted differently, TODO: look into it
@@ -15,19 +17,22 @@ const lowRating = evaluation => {
     }
 }
 
-export const parseEvaluations = (evaluationList) => {
+export const parseEvaluationStats = (evaluationList) => {
     return {
-        shortEvaluations: _.filter(evaluationList, evaluation => shortEval(evaluation)),
-        shortFeedbackEvaluations: _.filter(evaluationList, evaluation => shortFeedback(evaluation)),
-        lowRatingEvaluations:  _.filter(evaluationList, evaluation => lowRating(evaluation))
+        total: evaluationList.length,
+        shortEvaluations: _.filter(evaluationList, evaluation => shortEval(evaluation)).length,
+        shortFeedbackEvaluations: _.filter(evaluationList, evaluation => shortFeedback(evaluation)).length,
+        lowRatingEvaluations: _.filter(evaluationList, evaluation => lowRating(evaluation)).length,
+        goodnessDistribution: goodnessCount(evaluationList),
+        averageGoodness: _.meanBy(evaluationList, 'evalGoodness')
     }
 }
 
 export const applyGoodnessScale = (evaluationList) => {
     return evaluationList.map(evaluation => {
-        let goodness = shortEval(evaluation) ? 2/3 : 1;
-        goodness = shortFeedback(evaluation) ? goodness - 1/3 : goodness;
-        goodness = lowRating(evaluation) ? goodness - 1/3 : goodness;
+        let goodness = shortEval(evaluation) ? 2 / 3 : 1;
+        goodness = shortFeedback(evaluation) ? goodness - 1 / 3 : goodness;
+        goodness = lowRating(evaluation) ? goodness - 1 / 3 : goodness;
         return {
             ...evaluation,
             evalGoodness: parseFloat(goodness.toFixed(2))
@@ -50,3 +55,6 @@ export const paginateItems = (items, page = 1, per_page = 30) => {
         data: pagedItems
     }
 }
+
+export const filterByCorrectorId = (items, value) =>
+    _.filter(items, evaluation => evaluation.corrector.id == value)
