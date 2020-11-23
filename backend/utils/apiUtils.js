@@ -42,10 +42,10 @@ const fetchAllFromAPI = async (request, token, parameters = null) => {
     const maxCount = (await requestAPI(request, token, {...parameters, per_page: 1}))
         .headers['x-total'];
     const allData = [];
-    for (let page = 1; page <= Math.round(maxCount / 100); page++)
+    for (let page = 1; page <= Math.ceil(maxCount / 100); page++)
     {
         await new Promise(r => setTimeout(r, 500));
-        console.log(`fetching page ${page}/${Math.round(maxCount/100)}`)
+        console.log(`fetching page ${page}/${Math.ceil(maxCount/100)}`)
         let data = (await requestAPI(request, token, {
             ...parameters,
             per_page: 100,
