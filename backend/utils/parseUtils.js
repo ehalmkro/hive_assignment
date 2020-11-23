@@ -30,7 +30,7 @@ export const applyGoodnessScale = (evaluationList) => {
         goodness = lowRating(evaluation) ? goodness - 1/3 : goodness;
         return {
             ...evaluation,
-            evalGoodness: goodness.toFixed(2)
+            evalGoodness: parseFloat(goodness.toFixed(2))
         }
     })
 }
