@@ -28,7 +28,7 @@ const requestAPI = async (requestURI, token, parameters = null) => {
                 headers: {Authorization: `Bearer ${token}`},
                 params: parameters
             })
-        return response.data;
+        return response
     } catch (error) {
         console.log(error)
     }
@@ -37,33 +37,22 @@ const requestAPI = async (requestURI, token, parameters = null) => {
 
 const fetchAllFromAPI = async (request, token, parameters = null) => {
     console.log(`fetching ${request}`)
-    let data = await requestAPI(request, token, {...parameters, per_page: 100});
-    if (data.length < 100)
-        return data;
-    let allData = data;
-    let page = 2;
 
-    const apiLooper = async () => {
-        console.log('working...')
-        return await new Promise(resolve => {
-        const intervalID = setInterval(async () => {
-            data = await requestAPI(request, token, {
-                ...parameters,
-                per_page: 100,
-                page: page
-            });
-            page = page + 1;
-            allData.push(...data);
-            if (data.length < 100) {
-                clearInterval(intervalID)
-                console.log(`done fetching ${request}`)
-                resolve(allData)
-            }
-        }, 750)
-        })
+    const maxCount = (await requestAPI(request, token, {...parameters, per_page: 1}))
+        .headers['x-total'];
+    const allData = [];
+    for (let page = 1; page <= Math.round(maxCount / 100); page++)
+    {
+        console.log(`fetching page ${page}/${Math.round(maxCount/100)}`)
+        let data = (await requestAPI(request, token, {
+            ...parameters,
+            per_page: 100,
+            page: page
+        })).data;
+        await new Promise(r => setTimeout(r, 500));
+        allData.push(...data)
     }
-
-    return apiLooper();
+    return allData;
 }
 
 
