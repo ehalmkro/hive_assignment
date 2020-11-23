@@ -38,3 +38,15 @@ export const applyGoodnessScale = (evaluationList) => {
 export const goodnessCount = (evaluationList) => {
     return _.countBy(evaluationList, 'evalGoodness')
 }
+
+export const paginateItems = (items, page = 1, per_page = 30) => {
+    const offset = (page - 1) * per_page
+    const pagedItems = _.drop(items, offset).slice(0, per_page)
+    return {
+        page: page,
+        per_page: per_page,
+        last_page: Math.ceil(items.length / per_page),
+        total: items.length,
+        data: pagedItems
+    }
+}
