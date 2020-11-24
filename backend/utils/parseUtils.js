@@ -28,7 +28,7 @@ export const parseEvaluationStats = (evaluationList) => {
     }
 }
 
-export const applyGoodnessScale = (evaluationList) => {
+export const applyGoodnessScale = (evaluationList) => { // todo: keywords, weighted scale
     return evaluationList.map(evaluation => {
         let goodness = shortEval(evaluation) ? 2 / 3 : 1;
         goodness = shortFeedback(evaluation) ? goodness - 1 / 3 : goodness;
