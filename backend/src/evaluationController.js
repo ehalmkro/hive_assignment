@@ -5,7 +5,7 @@ import {
     parseEvaluationStats,
     applyGoodnessScale,
     paginateItems,
-    filterByCorrectorId
+    filterByCorrectorId, filterByUserList
 } from '../utils/parseUtils.js'
 import dbUtils from "./evaluationModel.js";
 
@@ -13,7 +13,7 @@ const evaluationController = express.Router()
 
 const {access_token, expires_in} = await getToken()
 console.log(access_token, expires_in)
-const dateRange = getTimeRange(4)
+const dateRange = getTimeRange(168)
 const campus_id = 13; //hive helsinki
 
 const db = await dbUtils.openDb()
@@ -50,9 +50,15 @@ evaluationController.get('/', async (request, response, next) => {
     return response.status(200).json(paginateItems(evaluationList, page, per_page))
 })
 
+evaluationController.get('/per_campus', async (request, response, next) => {
+    const {page, per_page} = request.query;
+    const filteredItems = filterByUserList(evaluationList, userList);
+    return response.status(200).json({ ...parseEvaluationStats(filteredItems), ...paginateItems(filteredItems, page, per_page)})
+})
+
 evaluationController.get('/users', async (request, response, next) => {
     const {page, per_page} = request.query;
-    return response.status(200).json({...paginateItems(userList, page, per_page), campus_id: campus_id})
+    return response.status(200).json({ campus_id: campus_id, ...paginateItems(userList, page, per_page)})
 })
 
 

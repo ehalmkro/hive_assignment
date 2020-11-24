@@ -58,3 +58,11 @@ export const paginateItems = (items, page = 1, per_page = 30) => {
 
 export const filterByCorrectorId = (items, value) =>
     _.filter(items, evaluation => evaluation.corrector.id == value)
+
+export const filterByUserList = (evaluationList, userList) => {
+    const userIdList = _.map(userList, user => user.id)
+    return _.filter(evaluationList, evaluation => {
+        if (_.includes(userIdList, evaluation.corrector.id))
+            return evaluation
+})
+}
