@@ -5,7 +5,7 @@ import {
     parseEvaluationStats,
     applyGoodnessScale,
     paginateItems,
-    filterByCorrectorId, filterByUserList
+    filterByCorrectorId, filterByUserList, sortBy
 } from '../utils/parseUtils.js'
 import dbUtils from "./evaluationModel.js";
 
@@ -51,8 +51,9 @@ evaluationController.get('/', async (request, response, next) => {
 })
 
 evaluationController.get('/per_campus', async (request, response, next) => {
-    const {page, per_page} = request.query;
-    const filteredItems = filterByUserList(evaluationList, userList);
+    const {page, per_page, sort} = request.query;
+    let filteredItems = filterByUserList(evaluationList, userList);
+    filteredItems = sort ? sortBy(filteredItems, sort) : filteredItems;
     return response.status(200).json({ ...parseEvaluationStats(filteredItems), ...paginateItems(filteredItems, page, per_page)})
 })
 

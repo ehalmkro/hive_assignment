@@ -66,3 +66,5 @@ export const filterByUserList = (evaluationList, userList) => {
             return evaluation
 })
 }
+
+export const sortBy = (items, order) => _.orderBy(items, order)
