@@ -24,7 +24,7 @@ const StatTable = ({stats}) => {
                 <TableBody>
                     <TableRow key="42">
                         <TableCell>{stats.total}</TableCell>
-                        <TableCell>{(stats.averageGoodness.toPrecision(2))}</TableCell>
+                        <TableCell>{(stats.averageGoodness.toFixed(2))}</TableCell>
                         <TableCell>{stats.shortEvaluations}</TableCell>
                         <TableCell>{stats.shortFeedbackEvaluations}</TableCell>
                         <TableCell>{stats.lowRatingEvaluations}</TableCell>

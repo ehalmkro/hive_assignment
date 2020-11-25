@@ -28,7 +28,7 @@ return (
     <TableBody>
         {evaluations.map(row => {
             return (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} style={{backgroundColor: `${row.evalGoodness < 0.67 ? 'pink' : 'white'}`}}>
                     <TableCell>{((new Date(row.begin_at)).toLocaleString("en-FI"))}</TableCell>
                     <TableCell><Link to={`/user/${row.corrector.id}`}>{row.corrector.login}</Link></TableCell>
                     <TableCell>{row.evalGoodness * 100 + '%'}</TableCell>
