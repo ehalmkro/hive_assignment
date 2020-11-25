@@ -7,6 +7,8 @@ import Table from "@material-ui/core/Table";
 import StackedBar from "./StackedBar";
 
 const StatTable = ({stats}) => {
+    if (!Object.keys(stats).length)
+        return null;
     return (
         <>
             <Table size='small'>
