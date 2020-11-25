@@ -14,26 +14,28 @@ My approach was to make a simple "microservice" using Node.js that pulls relevan
 
 * `GET /api/evaluations/stats/:id` gets same evaluation statistics for a specific user by `user_id`
 
-* `GET /api/evaluations/per_campus` gets evaluations from a hard-coded campus, in this case Hive Helsinki. Parameters `page` and  `per_page` apply. Can be sorted by object name using paramter `sort`. Example: `GET /api/evaluations/per_campus?sort=evalGoodness` would get the evaluations from a specific campus in ascending order of evaluation quality. These could be considered as a starting poins when trying to catch 'bad' evaluations.
+* `GET /api/evaluations/per_campus` gets evaluations from a hard-coded campus, in this case Hive Helsinki. Parameters `page` and  `per_page` apply. Can be sorted by object name using paramter `sort`. Example: `GET /api/evaluations/per_campus?sort=evalGoodness` would get the evaluations from a specific campus in ascending order of evaluation quality. These could be considered as a starting point when trying to catch 'bad' evaluations.
 
 * `GET /api/evaluations/users` shows a list of users of the specific hard-coded campus (Hive).
 
 The server handles the OAuth authentication and the initial data fetching using my own functions. I decided to code the authentication and API fetching myself because I did not have time to learn the proper use of specific libraries in the time frame of the assignment which was one week. By default, the program fetches the evals from the last 72 hours.
 
-The fetched evaluation and user data are saved to a SQLite database **as blobs**. This is because of the same time limit I did not have time to debug SQLite JSON parsing on Node.js. The database's purpose is to simply store the fetched data, all the data parsing is done serverside with lodash. This is obviously very costly and inefficient compared to proper relational database usage and specific selection queries. For the purpose of the minimum viable product it serves well enough.
+The fetched evaluation and user data are saved to a SQLite database **as blobs**. This is because of the same time limit I did not have time to get into SQLite JSON parsing on Node.js. The database's purpose is to simply store the fetched data, all the data parsing is done serverside with lodash. This is obviously very costly and inefficient compared to proper relational database usage and specific selection queries.
+
+These constraints reduce the app's capabilities. Having the service listen for new evaluations, grade them and add them to the database would be key functionality in real-life use. In it's current form the service only shows a static list of evaluations it fetches and grades on startup. For the purpose of the minimum viable product it serves well enough.
 
 ### Evaluation "quality"
 
-The evaluations pulled from the API are first graded in their "quality". The MVP algorithm for this is simply taking into account three factors. Each account for 33% of evaluations quality that ranges from 0 to 100%.
+The evaluations pulled from the API are first graded in their "quality". The naive MVP algorithm for this is simply taking into account three factors. Each of them account for 33% of evaluation's quality that ranges from 0 to 100%.
 
 Factors lessening the evaluation quality are:
 * length of the evaluation session `<` 15 minutes (-33%)
 * evaluator feedback text `<` 100 characters (-33%)
-* evaluations rating by evaluated `<=` 3/5 (-33%)
+* evaluation's rating by evaluated `<=` 3/5 (-33%)
 
-The quality graded evaluations are stored in the database and later matched with user data from Hive Helsinki to parse all the evaluations that have been held at Hive. This data can be used e.g. in comparing Hive Helsinki evaluation averages with averages of the whole 42 Network. A better approach for this would have been a proper weighted grade calculator where it would be possible to change the weights of different factors.
+The quality graded evaluations are stored in the database and later matched with user data from Hive Helsinki to parse all the evaluations that have been held at Hive. This data can be used e.g. in comparing Hive Helsinki evaluation averages with averages of the whole 42 Network. A better and much clearer approach for this would have been a proper weighted grade calculator where it would have been possible to change the importance of different factors in the final evaluation quality value.
 
-My further pedagogical thoughts are detailed in the accompanying PDF.
+My further pedagogical thoughts are detailed in the [accompanying PDF](./Pedagogical%20thoughts.pdf?raw=true).
 
 
 ## Front end
@@ -50,7 +52,7 @@ For the frontend I made a simple static React web app using Material UI. The fro
 
 ## Setting the environment variables
 
-To use the 42API, the server needs a `UID` and a `SECRET` value from the API either in the system's environment variables or in `/app/.env` file for dotenv. 42 students (and staff...) can get these from [intra](https://profile.intra.42.fr/oauth/applications). `UID` and `SECRET` are required. `PORT` and `EVAL_TIMEFRAME` are optional. The program uses `EVAL_TIMEFRAME` to fetch the evals from the last X hours specified by the variable.
+To use the 42API, the server needs a `UID` and a `SECRET` value from the API either in the system's environment variables or in separate `/app/.env` file for dotenv. 42 students (and staff...) can get these from [intra](https://profile.intra.42.fr/oauth/applications) by creating a new application or using an existing one. `UID` and `SECRET` are required. `PORT` and `EVAL_TIMEFRAME` are optional. The program uses `EVAL_TIMEFRAME` to fetch the evals from the last X hours specified by the variable.
 
 ## With Docker
 
@@ -103,7 +105,7 @@ After the server has initialized, navigate to `http://localhost:3001`.
  
 ## Additional commands
 
-You can run `npm run fetch [time in hours]` to fetch evaluations from the last x hours. This deletes the existings database.
+You can run `npm run fetch [time in hours]` to fetch evaluations from the last x hours. This deletes the existing database.
 
 ## Known issues
 
