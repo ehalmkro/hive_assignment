@@ -4,9 +4,11 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import Table from "@material-ui/core/Table";
+import StackedBar from "./StackedBar";
 
 const StatTable = ({stats}) => {
     return (
+        <>
             <Table size='small'>
                 <TableHead>
                     <TableRow>
@@ -27,6 +29,9 @@ const StatTable = ({stats}) => {
                     </TableRow>
                 </TableBody>
             </Table>
+            <h3>Eval "quality" distribution</h3>
+         <StackedBar data={stats.goodnessDistribution}/>
+        </>
     )
 }
 
