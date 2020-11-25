@@ -1,5 +1,5 @@
-backend/.env
-backend/node_modules
+app/.env
+app/node_modules
 .idea
-backend/evaluations.db
-backend/utils/requests.http
+app/evaluations.db
+app/utils/requests.http
