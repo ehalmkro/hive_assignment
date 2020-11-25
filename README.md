@@ -18,7 +18,7 @@ My approach was to make a simple "microservice" using Node.js that pulls relevan
 
 * `GET /api/evaluations/users` shows a list of users of the specific hard-coded campus (Hive).
 
-The server handles the OAuth authentication and the initial data fetching using my own functions. I decided to code the authentication and API fetching myself because I did not have time to learn the proper use of specific libraries in the time frame of the assignment which was one week.
+The server handles the OAuth authentication and the initial data fetching using my own functions. I decided to code the authentication and API fetching myself because I did not have time to learn the proper use of specific libraries in the time frame of the assignment which was one week. By default, the program fetches the evals from the last 72 hours.
 
 The fetched evaluation and user data are saved to a SQLite database **as blobs**. This is because of the same time limit I did not have time to debug SQLite JSON parsing on Node.js. The database's purpose is to simply store the fetched data, all the data parsing is done serverside with lodash. This is obviously very costly and inefficient compared to proper relational database usage and specific selection queries. For the purpose of the minimum viable product it serves well enough.
 
@@ -50,7 +50,7 @@ For the frontend I made a simple static React web app using Material UI. The fro
 
 ## Setting the environment variables
 
-To use the 42API, the server needs a `UID` and a `SECRET` value from the API either in the system's environment variables or in `/app/.env` file for dotenv. 42 students (and staff...) can get these from [intra](https://profile.intra.42.fr/oauth/applications).
+To use the 42API, the server needs a `UID` and a `SECRET` value from the API either in the system's environment variables or in `/app/.env` file for dotenv. 42 students (and staff...) can get these from [intra](https://profile.intra.42.fr/oauth/applications). `UID` and `SECRET` are required. `PORT` and `EVAL_TIMEFRAME` are optional. The program uses `EVAL_TIMEFRAME` to fetch the evals from the last X hours specified by the variable.
 
 ## With Docker
 
