@@ -22,7 +22,8 @@ const App = () => {
         <Router>
             <AppBar position="static" color="default">
                 <nav>
-                    <Button variant="contained" color="default" component={Link} to="/" onClick={() => dispatch(changePageTo(1))}>Home</Button>
+                    <Button variant="contained" color="default" component={Link} to="/"
+                            onClick={() => dispatch(changePageTo(1))}>Home</Button>
                     <Button variant="contained" color="default" component={Link} to="/stats">Evaluation stats</Button>
                 </nav>
             </AppBar>
@@ -31,11 +32,9 @@ const App = () => {
                     <UserInfo/>
                 </Route>
                 <Route path="/stats">
-                    <>
-                        <h1>Evaluation statistics</h1>
-                        {stats && <> <h2>All of 42 </h2> <StatTable stats={stats}/> </>}
-                        {evaluations && <> <h2>Hive </h2> <StatTable stats={evaluations}/> </>}
-                    </>
+                    <h1>Evaluation statistics</h1>
+                    {stats && <> <h2>All of 42 </h2> <StatTable stats={stats}/> </>}
+                    {evaluations && <> <h2>Hive </h2> <StatTable stats={evaluations}/> </>}
                 </Route>
                 <Route path="/">
                     <h1>Recent evaluations at Hive</h1>
