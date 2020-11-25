@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Route, Link, Switch} from "react-router-dom";
+import {HashRouter as Router, Route, Link, Switch} from "react-router-dom";
 import Dashboard from "./components/Dashboard"
 import UserInfo from "./components/UserInfo"
 import React, {useEffect} from 'react'
