@@ -27,7 +27,7 @@ export const updateDb = async (db, access_token, dateRange, campus_id) => {
 }
 
 export const parseHours = () => {
-    let hours = 168;
+    let hours = process.env.EVAL_TIMEFRAME || 72; 
     if (process.argv[2] === 'fetch') {
         hours = parseInt(process.argv[3])
         if (!hours) {
