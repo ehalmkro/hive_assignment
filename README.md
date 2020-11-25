@@ -6,7 +6,7 @@ The purpose of this assignment was to make a script to find students who have do
 
 My approach was to make a simple "microservice" using Node.js that pulls relevant data from the 42API, parses it together and displays it in the following 
 
-### Endpoints:
+### Endpoints
 
 * `GET /api/evaluations` gets all the evaluations from all 42 schools. Paginated by parameters `per_page` (default 30) and `page`, for example `GET /api/evaluations?per_page=50&page=2`
 
