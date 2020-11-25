@@ -75,6 +75,8 @@ PORT=3001
 The initialization will take a while as the server is fetching a lot of rate limited data from the API. You can watch your progress with 
 `docker logs [container id]`
 
+After the server has initialized, navigate to `http://[docker-machine ip]:3001`.
+
 ## Without Docker
 
 Make sure you have either 
@@ -95,6 +97,8 @@ PORT=3001%
  `npm install && npm start`
  
 The initialization will take a while as the server is fetching a lot of rate limited data from the API. 
+
+After the server has initialized, navigate to `http://localhost:3001`.
  
  
 ## Additional commands
