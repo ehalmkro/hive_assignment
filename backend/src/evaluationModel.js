@@ -5,10 +5,10 @@ import {open} from 'sqlite'
 sqlite3.verbose();
 
 const openDb = async () => {
-   const db =  await open({
-            filename: './evaluations.db',
-            driver: sqlite3.Database
-        })
+    const db = await open({
+        filename: './evaluations.db',
+        driver: sqlite3.Database
+    })
     await db.run('CREATE TABLE IF NOT EXISTS scale_teams(json text)')
     await db.run('CREATE TABLE IF NOT EXISTS users(json text)')
     return db;
@@ -29,5 +29,5 @@ const getAllJSON = async (db, table) => {
 }
 
 
-export default { openDb, save, countAll, getAllJSON }
+export default {openDb, save, countAll, getAllJSON}
 

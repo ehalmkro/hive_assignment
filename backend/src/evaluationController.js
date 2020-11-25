@@ -1,36 +1,25 @@
 import express from 'express';
-import {fetchAllFromAPI, getToken} from "../utils/apiUtils.js";
+import {getToken} from "../utils/apiUtils.js";
 import {getTimeRange} from "../utils/utils.js";
 import {
     parseEvaluationStats,
-    applyGoodnessScale,
     paginateItems,
     filterByCorrectorId, filterByUserList, sortBy
 } from '../utils/parseUtils.js'
 import dbUtils from "./evaluationModel.js";
+import {updateDb, parseHours} from "../utils/utils.js";
 
 const evaluationController = express.Router()
 
+
 const {access_token, expires_in} = await getToken()
 console.log(access_token, expires_in)
-const dateRange = getTimeRange(168)
+
+
+const dateRange = getTimeRange(parseHours())
 const campus_id = 13; //hive helsinki
-
 const db = await dbUtils.openDb()
-
-if ((await dbUtils.countAll(db, 'scale_teams')).COUNT === 0) {
-    console.log(`fetching evals from ${dateRange.min} to ${dateRange.max}...`)
-    await dbUtils.save(
-        db, applyGoodnessScale(
-            await fetchAllFromAPI(
-                `/scale_teams?range[filled_at]=${dateRange.min.toISOString()},${dateRange.max.toISOString()}`, access_token)), 'scale_teams')
-}
-if ((await dbUtils.countAll(db, 'users')).COUNT === 0) {
-    console.log(`fetching users from campus #${campus_id}...`)
-    await dbUtils.save(db,
-        await fetchAllFromAPI(`/campus/${campus_id}/users`, access_token),
-        'users')
-}
+await updateDb(db, access_token, dateRange, campus_id)
 
 const evaluationList = await dbUtils.getAllJSON(db, 'scale_teams')
 const userList = await dbUtils.getAllJSON(db, 'users')

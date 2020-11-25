@@ -1,6 +1,5 @@
 import cors from 'cors';
 import express from 'express';
-
 import evaluationController from "./src/evaluationController.js";
 
 
